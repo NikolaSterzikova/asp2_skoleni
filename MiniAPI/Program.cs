@@ -1,17 +1,21 @@
+using Microsoft.AspNetCore.Builder;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi("openapi/miniapi.json");
+    //app.UseSwagger("openapi/miniapi.json");
 }
-
 app.UseHttpsRedirection();
 
 var summaries = new[]
@@ -32,6 +36,11 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+// Mapujeme Get request
+app.MapGet("/", () =>
+$"API bìží nyní je {DateTime.Now}"
+);
 
 app.Run();
 

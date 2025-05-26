@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Socks>
+@{
+
+}
+<h1>Socks</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Price</th>
+            <th>Size</th>
+            <th>Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sock in Model)
+        {
+            <tr>
+                <td>@sock.Brand</td>
+                <td>@sock.Price</td>
+                <td>@sock.Size</td>
+                <td>@Html.ActionLink("Detail", "GetById", new { id = sock.ID })</td>
+            </tr>
+        }
+    </tbody>
+</table>
