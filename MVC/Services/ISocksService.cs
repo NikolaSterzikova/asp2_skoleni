@@ -2,7 +2,7 @@
 
 namespace MVC.Services
 {
-    public interface ISocksService
+    public interface ISocksService: IService
     {
         IEnumerable<Socks> GetSocks();
     }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC.Data;
 using MVC.Services;
 using System.Reflection;
+using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,20 +21,26 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<ISocksService, SocksService>();
+// Vestavìný DI kontejner
+//builder.Services.AddScoped<ISocksService, SocksService>();
 
 
 var windsorContainer = new WindsorContainer();
-// Registrace služeb do Windsor kontejneru
-windsorContainer.Register(
-    Classes.FromAssembly(Assembly.GetExecutingAssembly())
-        .BasedOn<IService>()
-        .WithService.FromInterface()
-        .LifestyleScoped()
-);
 
 // Fix: Use the correct constructor for WindsorServiceProviderFactory
-builder.Host.UseServiceProviderFactory(new WindsorServiceProviderFactory(windsorContainer));
+builder.Host.UseServiceProviderFactory(new WindsorServiceProviderFactory());
+
+builder.Host.ConfigureContainer<IWindsorContainer>(windsor =>
+{
+    windsor.Register(
+        Classes.FromAssembly(Assembly.GetExecutingAssembly())
+            .BasedOn<IService>() // Z tohoto rozhraní musí dìdit ostatní rozhraní, ne konkrténtí tøídy, jako døíve
+            .WithService.FromInterface()
+            .LifestyleTransient() //•	Scope v ASP.NET Core je spravován frameworkem, Windsor to musí respektovat. (Nepoužívat "LifestyleScoped() ")
+    );
+});
+
+
 
 var app = builder.Build();
 // Odtud záložeí na poøadí pøidávání middlewarù.
