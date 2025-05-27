@@ -22,6 +22,14 @@ namespace MVC.Controllers
         // GET: NewSocks
         public async Task<IActionResult> Index()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                ViewData["Message"] = "Vítejte zpět, " + User.Identity.Name + "!";
+            }
+            else
+            {
+                ViewData["Message"] = "Vítejte na našich stránkách!";
+            }
             return View(await _context.NewSocks.ToListAsync());
         }
 
