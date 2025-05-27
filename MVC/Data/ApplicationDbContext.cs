@@ -7,6 +7,7 @@ namespace MVC.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<NewSocks> NewSocks { get; set; } // Tabulka pro databázi
+        public DbSet<Request> Request { get; set; } // Tabulka pro databázi
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

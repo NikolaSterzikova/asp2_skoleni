@@ -7,22 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC.Data;
 using MVC.Models;
+using MVC.Services;
 
 namespace MVC.Controllers
 {
     public class NewSocksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SimpleFileLogger _logger;
 
-        public NewSocksController(ApplicationDbContext context)
+        public NewSocksController(ApplicationDbContext context, SimpleFileLogger logger)
         {
             _context = context;
+            this._logger = logger;
         }
 
         // GET: NewSocks
         public async Task<IActionResult> Index()
         {
-            if(User.Identity.IsAuthenticated)
+            _logger.Log("Index action called in NewSocksController.");
+            if (User.Identity.IsAuthenticated)
             {
                 ViewData["Message"] = "Vítejte zpět, " + User.Identity.Name + "!";
             }
