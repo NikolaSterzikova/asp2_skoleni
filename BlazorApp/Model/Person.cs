@@ -1,4 +1,6 @@
-﻿namespace BlazorApp.Model;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BlazorApp.Model;
 // Nepotřebujeme
 //public class Rootobject
 //{
@@ -8,8 +10,10 @@
 public class Person // přejmenovali jsme Class1
 {
     public int Id { get; set; }
+    [MaxLength(15)] // přidali jsme validaci délky jména
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    [EmailAddress] // přidali jsme validaci emailu
     public string Email { get; set; }
     public DateTime DateOfBirth { get; set; }
     public Address Address { get; set; }

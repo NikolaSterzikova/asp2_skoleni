@@ -1,0 +1,16 @@
+﻿@page "/person/create"
+@using BlazorApp.Components.Forms
+<h3>Create new person</h3>
+<PersonForm Person="person" OnSave="AddNewPerson"></PersonForm>
+
+
+@code {
+    BlazorApp.Model.Person person = new();
+    void AddNewPerson()
+    {
+        // Zde můžeme volat metodu, která uloží data
+        Console.WriteLine($"Adding new person: {person.FirstName} {person.LastName}");
+        // Například zde bychom mohli přidat osobu do databáze nebo seznamu
+        // data.AddPerson(person); // Předpokládáme, že máme metodu pro přidání osoby
+    }
+}

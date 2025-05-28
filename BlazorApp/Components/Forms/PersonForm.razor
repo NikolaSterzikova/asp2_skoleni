@@ -1,0 +1,58 @@
+﻿@* @* ﻿<EditForm Model="Person" OnValidSubmit="Save">  Potřebujeme vyplnit metodu callbacku, kterou budeme zavát na stránce, kde budeme komponentu volat *@
+﻿<EditForm Model="Person" OnValidSubmit="OnSave">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Jméno</label>
+        <div class="col-md-3">
+            <InputText @bind-Value="Person.FirstName" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Příjmení</label>
+        <div class="col-md-3">
+            <InputText @bind-Value="Person.LastName" class="form-control" />
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Email</label>
+        <div class="col-md-3">
+            <InputText @bind-Value="Person.Email" class="form-control" />
+            <ValidationMessage For="() => Person.Email" /> @* Vypíše chybovou zprávu *@
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Datum narození</label>
+        <div class="col-md-3">
+            <InputDate @bind-Value="Person.DateOfBirth" class="form-control" />
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <button class="btn btn-primary" type="submit">Ulož</button>
+        </div>
+    </div>
+    <div>
+        <ValidationSummary />
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public BlazorApp.Model.Person Person { get; set; }
+
+    [Parameter]
+    public int id { get; set; }
+
+    [Parameter]
+    public Action OnSave { get; set; } 
+    void Save()
+    {
+        // Zde můžeme volat metodu, která uloží data
+        OnSave?.Invoke();
+    }
+}

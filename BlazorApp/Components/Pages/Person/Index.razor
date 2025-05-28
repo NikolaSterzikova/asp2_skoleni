@@ -1,8 +1,17 @@
 ﻿@page "/person"
 @inject DataSet data
-<h3>Prvních 20 osob</h3>
+@inject NavigationManager navigationManager 
+<h3>Prvních @next osob</h3>
+
+<p>
+    <h4>Filtr</h4>
+    <InputText @bind-Value="emailSearch" class="form-control" />
+    @* Pokud chceme volat funkci Blazor onclick, musíme použít zápis se zavináčem *@
+    <button class="btn btn-primary" @onclick="Hledat">Filtrovat</button>
+</p>
+
 <table class="table">
-   <thead>
+    <thead>
         <tr>
             <th>Jméno</th>
             <th>Příjmení</th>
@@ -11,7 +20,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var person in Top20)
+        @foreach (var person in Top10)
         {
             <tr>
                 <td>@person.FirstName</td>
@@ -24,14 +33,94 @@
 </table>
 
 
+<button class="btn btn-primary" @onclick="Back"
+        @attributes="(dict)">
+    Back
+</button>
+<button class="btn btn-primary" @onclick="Next">Next</button>
+
+
+<p>
+    <button class="btn btn-primary" @onclick="ReadNext">Načíst další</button>
+</p>
 
 @code {
-    List<BlazorApp.Model.Person> Top20 = new List<BlazorApp.Model.Person>();
+    string emailSearch = String.Empty;
+    Dictionary<string, object> dict = null;
+    string _datum = string.Empty;
+    int next = 10;
+    int skip = 0;
+    int take = 10;
+    private bool isDisabled = false;
+    List<BlazorApp.Model.Person> Top10 = new List<BlazorApp.Model.Person>();
     protected override void OnInitialized()
     {
-        Top20 = data.GetData().Take(20).ToList();
+        Top10 = data.GetData().Take(10).ToList();
     }
-
-
-
+    public void Nacist(int take = 10, int skip = 0)
+    {
+        next = Math.Max(0, next);
+        if (next == 0) skip = 0;
+        Top10 = data.GetData().Take(take).Skip(skip).ToList();
+    }
+    public void Next()
+    {
+        next = (next + take);
+        skip = skip + take;
+        Nacist(next, skip);
+    }
+    public void Back()
+    {
+        if (next == 0)
+        {
+            dict = new Dictionary<string, object>
+            { { "disabled", "disabled" } };
+        }
+        else
+        {
+            // Nějak to nefunguje
+            dict = null;
+        }
+        next = (next - take);
+        skip = skip - take;
+        Nacist(next, skip);
+    }
+    public void NastavitDisabled()
+    {
+        //todo
+    }
+    public void Hledat()
+    {
+        if (string.IsNullOrEmpty(emailSearch))
+        {
+            Top10 = data.GetData().Take(10).ToList();
+        }
+        else
+        {
+            Top10 = data.GetData().Where(x => x.Email.Contains(emailSearch)).Take(10).ToList();
+        }
+    }
+    public void ReadNext()
+    {
+        NacistDalsi(next + take, skip + take);
+        if (Top10.Count == 0)
+        {
+            isDisabled = true;
+        }
+        else
+        {
+            isDisabled = false;
+        }
+    }
+    public void NacistDalsi(int take = 10, int skip = 0)
+    {
+        next = Math.Max(0, next);
+        if (next == 0) skip = 0;
+        Top10.AddRange( data.GetData().Take(take).Skip(skip).ToList());
+    }
+    void XX()
+    {
+        // Když bychom přesměrovávali z Blazor stránky do MVC kontroleru, potřebujeme použít navigationManager a nastavit mu aby vynutil Request
+        navigationManager.NavigateTo("/person/create",forceLoad: true);
+    }
 }

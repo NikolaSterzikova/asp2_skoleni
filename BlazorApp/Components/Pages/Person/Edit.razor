@@ -1,0 +1,27 @@
+﻿@page "/person/edit/{id:int}"
+@inject DataSet data
+@using BlazorApp.Components.Forms
+<h3>Edit</h3>
+
+@* výchozí komponenta Blazor od MS *@
+@* Model - můžeme dát data kontext *@
+@* Můžeme použít OnValidSubmit a zároveň OnInvalidSubmit *@
+
+<PersonForm Person="person" OnSave="SaveEdit"></PersonForm>
+
+@code {
+    BlazorApp.Model.Person Person = new();
+    [Parameter]
+    public int id { get; set; }
+    BlazorApp.Model.Person person = new();
+    protected override void OnInitialized()
+    {
+        person = data.GetData().ElementAt(id);
+
+    }
+
+    void SaveEdit()
+    {
+        Console.WriteLine($"ukládám osobu do db  {person.FirstName} {person.LastName}");
+    }
+}
