@@ -1,0 +1,37 @@
+﻿@page "/person"
+@inject DataSet data
+<h3>Prvních 20 osob</h3>
+<table class="table">
+   <thead>
+        <tr>
+            <th>Jméno</th>
+            <th>Příjmení</th>
+            <th>Email</th>
+            <th>Dat. narození</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Top20)
+        {
+            <tr>
+                <td>@person.FirstName</td>
+                <td>@person.LastName</td>
+                <td>@person.Email</td>
+                <td>@person.DateOfBirth.ToString("dd.MM.yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    List<BlazorApp.Model.Person> Top20 = new List<BlazorApp.Model.Person>();
+    protected override void OnInitialized()
+    {
+        Top20 = data.GetData().Take(20).ToList();
+    }
+
+
+
+}

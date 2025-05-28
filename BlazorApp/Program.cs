@@ -7,6 +7,7 @@ builder.Services.AddRazorComponents() // Blazoru se øíká Razor Components
     .AddInteractiveServerComponents(); // kód se vykonává na serveru
 
 builder.Services.AddScoped<BlazorApp.Services.SimpleCounter>(); // pøidání služby pro poèítadlo
+builder.Services.AddScoped<BlazorApp.Data.DataSet>(); // pøidání služby pro data
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
