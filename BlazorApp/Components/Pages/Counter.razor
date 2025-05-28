@@ -1,0 +1,26 @@
+﻿@page "/counter"
+@using BlazorApp.Services
+// Takto se injektuje služba v Blazoru
+@inject SimpleCounter simpleCounter
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+@* <p role="status">Current count: @currentCount</p> *@
+<p role="status">
+    Current count: @simpleCounter.Counter
+</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    // Je to interaktivní, jakmile se změní hodnota proměnné currentCount, Blazor automaticky aktualizuje UI.
+    // private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        //currentCount++;
+        simpleCounter.Counter++;
+    }
+}
